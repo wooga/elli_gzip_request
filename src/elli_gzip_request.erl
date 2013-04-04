@@ -11,7 +11,7 @@
 -module(elli_gzip_request).
 -behaviour(elli_middleware).
 -export([handle/2,preprocess/2,postprocess/3,handle_event/3]).
--include("../deps/elli/include/elli.hrl").
+-include_lib("elli/include/elli.hrl").
 
 
 postprocess(_Req, Reply, _Args) -> Reply.
