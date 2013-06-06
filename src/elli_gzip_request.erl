@@ -41,7 +41,7 @@ uncompress_request(Req) ->
     NewReq.
 
 
-%-ifdef(TEST).
+-ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
 
 preprocess_test() ->
@@ -59,8 +59,4 @@ uncompress_request_test() ->
     ?assertEqual(<<"Hello">>,NewReq#req.body),
     ?assertEqual(<<"5">>, proplists:get_value(<<"Content-Length">>, NewReq#req.headers)).
 
-
-
-
-
-    %-endif.
+-endif.
