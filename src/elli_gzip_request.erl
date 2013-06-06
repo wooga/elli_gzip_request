@@ -12,7 +12,6 @@
 -export([handle/2,preprocess/2,postprocess/3,handle_event/3]).
 -include_lib("elli/include/elli.hrl").
 
-
 postprocess(_Req, Reply, _Args) -> Reply.
 handle(_Req, _Args) -> ignore.
 handle_event(_Event, _Data, _ElliArgs) -> ok.
@@ -25,21 +24,17 @@ preprocess(Req, _Args) ->
             Req
     end.
 
-uncompress_request(Req) ->
-    Body = Req#req.body,
-    Headers = Req#req.headers,
-    CleanHeaders = proplists:delete(<<"Content-Encoding">>,
-                                   proplists:delete(<<"Content-Length">>, Headers)),
+uncompress_request(#req{body = Body, headers = Headers} = Req) ->
+    CleanHeaders = proplists:delete(
+                     <<"Content-Encoding">>,
+                     proplists:delete(<<"Content-Length">>, Headers)),
 
     NewBody = zlib:gunzip(Body),
     NewSize = list_to_binary(integer_to_list(byte_size(NewBody))),
 
     NewHeaders = [{<<"Content-Length">>, NewSize}|CleanHeaders],
 
-    NewReq = Req#req{body = NewBody, headers = NewHeaders},
-
-    NewReq.
-
+    Req#req{body = NewBody, headers = NewHeaders}.
 
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
